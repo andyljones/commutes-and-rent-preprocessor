@@ -10,13 +10,13 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 public class KmlUnmarshallerTest {
 
-    private static final String KML_TEST_FILE_PATH = "kmlTestData.kml";
+    private static final String TEST_FILE_PATH = "kml-unmarshaller-test-data.kml";
     
     @Test
     public void getRootElement_ShouldSuccessfullyReturnAFeatureObject()
     {
         // Execution
-        Kml result = KmlUnmarshaller.getRootElement(KML_TEST_FILE_PATH);
+        Kml result = KmlUnmarshaller.getRootElement(TEST_FILE_PATH);
         
         // Verification
         Assert.assertThat(result, notNullValue());
@@ -26,7 +26,7 @@ public class KmlUnmarshallerTest {
     public void getRootElement_ShouldReturnAnObjectWithTheCorrectName()
     {
         // Execution
-        String result = KmlUnmarshaller.getRootElement(KML_TEST_FILE_PATH).getFeature().getName();
+        String result = KmlUnmarshaller.getRootElement(TEST_FILE_PATH).getFeature().getName();
         
         // Verification
         Assert.assertThat(result, equalTo("KML Test Data"));

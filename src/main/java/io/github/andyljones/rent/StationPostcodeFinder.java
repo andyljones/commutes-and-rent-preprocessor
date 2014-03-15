@@ -32,7 +32,7 @@ public class StationPostcodeFinder {
     {
         nameToPostcodeMap = buildNameToPostcodeMap(stationLocations);
     }
-
+    
     private static Map<String, String> buildNameToPostcodeMap(final Kml locations) 
     {
         final Document document = (Document) locations.getFeature();
@@ -46,7 +46,8 @@ public class StationPostcodeFinder {
             
             if (validatePostcode(postcode))
             {
-                final String sevenLetterPostcode = padToSevenLetters(postcode);
+                final String sevenLetterPostcode = formatToSevenCharacters(postcode);
+
                 result.put(name, sevenLetterPostcode);
             }
         }
@@ -70,7 +71,7 @@ public class StationPostcodeFinder {
         return postcode;
     }
 
-    private static String padToSevenLetters(String postcode) 
+    private static String formatToSevenCharacters(String postcode) 
     {    
         final String[] components = postcode.split(" ");
         final int numberOfLetters = Arrays.stream(components).mapToInt(str -> str.length()).sum();
