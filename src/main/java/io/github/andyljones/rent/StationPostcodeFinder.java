@@ -1,5 +1,6 @@
 package io.github.andyljones.rent;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,11 @@ public class StationPostcodeFinder {
     public String getPostcode(String stationName) { return nameToPostcodeMap.get(stationName); }
     private final Map<String, String> nameToPostcodeMap;
      
-    private static final Pattern POSTCODE_REGEX = Pattern.compile("^((GIR 0AA)|((([A-PR-UWYZ][A-HK-Y]?[0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRV-Y]))) ?[0-9][ABD-HJLNP-UW-Z]{2}))$");
+    private static final Pattern POSTCODE_REGEX = Pattern.compile("^((GIR 0AA)|((([A-PR-UWYZ][A-HK-Y]?[0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRV-Y]))) *[0-9][ABD-HJLNP-UW-Z]{2}))$");
     private static final String DEFAULT_POSTCODE = "SW1H 0BD";
     
     /**
-     * Construct a getPostcode function using the specified location data.
+     * Construct a getPostcode function using the specified location data. Discards invalid postcodes.
      * @param stationLocations Station location data.
      */
     public StationPostcodeFinder(final Kml stationLocations)
@@ -37,8 +38,6 @@ public class StationPostcodeFinder {
         final Document document = (Document) locations.getFeature();
         final List<Placemark> placemarks = document.getFeature().stream().map(feature -> (Placemark) feature).collect(Collectors.toList());
         
-        int invalidStationPostcodeCount = 0;
-        
         final Map<String, String> result = new HashMap<>();
         for (Placemark placemark : placemarks)
         {
@@ -47,16 +46,10 @@ public class StationPostcodeFinder {
             
             if (validatePostcode(postcode))
             {
-                result.put(name, postcode);
-            }
-            else
-            {
-                invalidStationPostcodeCount = invalidStationPostcodeCount + 1;
+                final String sevenLetterPostcode = padToSevenLetters(postcode);
+                result.put(name, sevenLetterPostcode);
             }
         }
-        
-        System.out.println("There were " + result.size() + " stations with valid postcodes");
-        System.out.println("There were " + invalidStationPostcodeCount + " stations with invalid postcodes");
         
         return result;
     }
@@ -75,6 +68,25 @@ public class StationPostcodeFinder {
         final String postcode = addressComponents[addressComponents.length - 1].trim();
         
         return postcode;
+    }
+
+    private static String padToSevenLetters(String postcode) 
+    {    
+        final String[] components = postcode.split(" ");
+        final int numberOfLetters = Arrays.stream(components).mapToInt(str -> str.length()).sum();
+        
+        final String result;
+        if (numberOfLetters < 7)
+        {
+            final String padding = new String(new char[7 - numberOfLetters]).replace("\0", " ");
+            result = components[0] + padding + components[1];
+        }
+        else
+        {
+            result = String.join("", components);
+        }
+        
+        return result;
     }
 
     private static boolean validatePostcode(String postcode) 

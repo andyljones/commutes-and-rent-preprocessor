@@ -29,7 +29,7 @@ public class StationPostcodeFinderTest {
     }
     
     @Test
-    public void getPostcode_OnTestNames_ShouldReturnTestPostcode()
+    public void getPostcode_OnValidData_ShouldReturnTestPostcode()
     {
         // Setup
         String testName = "TestName";
@@ -46,7 +46,7 @@ public class StationPostcodeFinderTest {
     }    
     
     @Test
-    public void getPostcode_OnTestNames_ShouldNotCreateEntriesForInvalidPostcodes()
+    public void getPostcode_OnAnInvalidPostcode_ShouldNotCreateAnEntryForThatPlace()
     {
         // Setup
         String testName = "TestName";
@@ -60,5 +60,22 @@ public class StationPostcodeFinderTest {
         
         // Verification
         Assert.assertThat(result, nullValue());   
+    }   
+    
+    @Test
+    public void getPostcode_OnASubSevenLetterPostcode_ShouldPadThePostcodeToSevenLetters()
+    {
+        // Setup
+        String testName = "TestName";
+        String testPostcode = "L7 0JQ";
+        addPlaceToTestData(testName, "TestAddressClauseA, " + testPostcode);
+        
+        StationPostcodeFinder sut = new StationPostcodeFinder(testData);
+        
+        // Execution
+        String result = sut.getPostcode(testName);
+        
+        // Verification
+        Assert.assertThat(result, equalTo("L7  0JQ"));   
     }   
 }
