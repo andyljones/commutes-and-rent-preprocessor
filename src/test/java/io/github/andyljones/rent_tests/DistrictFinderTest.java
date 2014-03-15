@@ -1,4 +1,4 @@
-package io.github.andyljones.rentTests;
+package io.github.andyljones.rent_tests;
 
 
 import io.github.andyljones.rent.DistrictFinder;

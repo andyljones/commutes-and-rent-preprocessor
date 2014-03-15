@@ -1,4 +1,4 @@
-package io.github.andyljones.rentTests;
+package io.github.andyljones.rent_tests;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class ScratchTest {
         DistrictFinder districtFinder = new DistrictFinder("local-authority-districts/local-authority-districts.csv");
         RentFinder rentFinder = new RentFinder("rents/131212-Table2.3.csv");
         
-        String stationName = "Westminster";
+        String stationName = "Bayswater";
         
         String postcode = postcodeFinder.getPostcode(stationName);
         String district = districtFinder.getDistrict(postcode);
