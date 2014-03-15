@@ -1,8 +1,8 @@
 package io.github.andyljones.rentTests;
 
-import io.github.andyljones.rent.KMLUnmarshaller;
-
 import static org.hamcrest.Matchers.*;
+import io.github.andyljones.rent.KmlUnmarshaller;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,20 +13,20 @@ public class KmlUnmarshallerTest {
     private static final String KML_TEST_FILE_PATH = "kmlTestData.kml";
     
     @Test
-    public void getRoot_ShouldSuccessfullyReturnAKMLObject()
+    public void getRootElement_ShouldSuccessfullyReturnAFeatureObject()
     {
         // Execution
-        Kml result = KMLUnmarshaller.getRoot(KML_TEST_FILE_PATH);
+        Kml result = KmlUnmarshaller.getRootElement(KML_TEST_FILE_PATH);
         
         // Verification
         Assert.assertThat(result, notNullValue());
     }
     
     @Test
-    public void getRoot_ShouldReturnAnObjectWithTheCorrectName()
+    public void getRootElement_ShouldReturnAnObjectWithTheCorrectName()
     {
         // Execution
-        String result = KMLUnmarshaller.getRoot(KML_TEST_FILE_PATH).getFeature().getName();
+        String result = KmlUnmarshaller.getRootElement(KML_TEST_FILE_PATH).getFeature().getName();
         
         // Verification
         Assert.assertThat(result, equalTo("KML Test Data"));
