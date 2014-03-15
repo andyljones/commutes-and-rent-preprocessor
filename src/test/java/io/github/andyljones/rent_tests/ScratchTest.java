@@ -10,7 +10,7 @@ import io.github.andyljones.rent.StationPostcodeFinder;
 
 public class ScratchTest {
 
-    @Test
+    //@Test
     public void scratch1()
     {
         Kml stationKml = KmlUnmarshaller.getRootElement("station-locations/station-locations.kml");
