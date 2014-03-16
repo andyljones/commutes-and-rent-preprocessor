@@ -1,4 +1,4 @@
-package io.github.andyljones.rent_tests;
+package io.github.andyljones.transit_test;
 
 import static org.hamcrest.Matchers.*;
 import io.github.andyljones.transit.StationFinder;

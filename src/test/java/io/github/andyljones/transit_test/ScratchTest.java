@@ -1,4 +1,4 @@
-package io.github.andyljones.rent_tests;
+package io.github.andyljones.transit_test;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
