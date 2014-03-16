@@ -1,7 +1,10 @@
-package io.github.andyljones.transit.graph;
+package io.github.andyljones.transit;
+
+import io.github.andyljones.transit.graph.Station;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,6 +12,7 @@ import uk.org.transxchange.StopPointStructure;
 
 public class StationFinder {
 
+    public Collection<Station> getStations() { return new HashSet<>(stationMap.values()); }
     public Station getStation(final String atcoCode) { return stationMap.get(atcoCode); }
     private final Map<String, Station> stationMap;
     
@@ -25,8 +29,8 @@ public class StationFinder {
         final Map<String, Station> result = new HashMap<>();
         for (Map.Entry<String, String> entry : atcoCodeMap.entrySet())
         {
-            final String atcoCode = entry.getKey();
-            final String stationName = entry.getValue();
+            final String atcoCode = entry.getKey().trim();
+            final String stationName = entry.getValue().trim();
             final Station station = stationNameMap.get(stationName);
             
             result.put(atcoCode, station);

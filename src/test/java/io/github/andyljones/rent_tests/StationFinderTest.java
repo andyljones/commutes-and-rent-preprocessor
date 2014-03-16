@@ -1,9 +1,8 @@
-package io.github.andyljones.transit_tests;
+package io.github.andyljones.rent_tests;
 
 import static org.hamcrest.Matchers.*;
-
+import io.github.andyljones.transit.StationFinder;
 import io.github.andyljones.transit.graph.Station;
-import io.github.andyljones.transit.graph.StationFinder;
 
 import org.junit.Assert;
 import org.junit.Test;

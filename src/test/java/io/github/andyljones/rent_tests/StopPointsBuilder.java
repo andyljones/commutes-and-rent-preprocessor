@@ -1,4 +1,4 @@
-package io.github.andyljones.transit_tests;
+package io.github.andyljones.rent_tests;
 
 import java.util.ArrayList;
 import java.util.Collection;

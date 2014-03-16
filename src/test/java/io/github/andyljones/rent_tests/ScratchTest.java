@@ -1,73 +1,61 @@
 package io.github.andyljones.rent_tests;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import uk.org.transxchange.TransXChange;
-import de.micromata.opengis.kml.v_2_2_0.Kml;
-import io.github.andyljones.rent.DistrictFinder;
-import io.github.andyljones.rent.KmlUnmarshaller;
-import io.github.andyljones.rent.RentFinder;
-import io.github.andyljones.rent.StationPostcodeFinder;
+import io.github.andyljones.transit.JourneyHolders;
+import io.github.andyljones.transit.JourneyPartsHolder;
+import io.github.andyljones.transit.StationFinder;
+import io.github.andyljones.transit.StationNetworker;
 import io.github.andyljones.transit.TransXChangeUnmarshaller;
+import io.github.andyljones.transit.graph.Station;
+import io.github.andyljones.transit.graph.Stop;
 
 public class ScratchTest {
-
+    
     //@Test
-    public void scratch1()
+    public void scratch()
     {
-        List<String> paths = null;
-        try
+        TransXChange root = TransXChangeUnmarshaller.getRootElement("/timetables/tfl_1-BAK-390106-y05.xml");
+        
+        Collection<JourneyPartsHolder> result = JourneyHolders.asHolders(root);
+        
+        
+        StationFinder finder = new StationFinder(root.getStopPoints().getStopPoint());
+        StationNetworker networker = new StationNetworker(finder::getStation);
+        
+        for (JourneyPartsHolder journeyParts : result)
         {
-            Path path = Paths.get("src/main/resources/timetables");
-            paths = Files.list(path).map(p -> "/timetables/" + p.getFileName().toString()).collect(Collectors.toList());
-            
-            System.out.println(paths);        
-            
-        }
-        catch (Exception e)
-        {
-            
+            networker.addJourney(journeyParts);
         }
         
-        Set<String> names = new HashSet<>();
-        for (String path : paths)
-        {
-            TransXChange root = TransXChangeUnmarshaller.getRootElement(path);
-            
-            List<String> thisNames = root.getStopPoints().getStopPoint().stream().map(aspr -> aspr.getDescriptor().getCommonName().getValue().trim()).collect(Collectors.toList());
-            
-            names.addAll(thisNames);
-        }
-        
-        Kml stationKml = KmlUnmarshaller.getRootElement("station-locations/station-locations.kml");
-        StationPostcodeFinder postcodeFinder = new StationPostcodeFinder(stationKml);
-        DistrictFinder districtFinder = new DistrictFinder("local-authority-districts/local-authority-districts.csv");
-        RentFinder rentFinder = new RentFinder("rents/131212-Table2.3.csv");
+        Station s = finder.getStation("9400ZZLUWYC1");
+        System.out.println(s.getName());
+        System.out.println(s.getStops().size());
 
-        int totalCount = 0;
-        int nullCount = 0;
-        for (String name : names)
-        {        
-            String postcode = postcodeFinder.getPostcode(name);
-            String district = districtFinder.getDistrict(postcode);
-            String rent = rentFinder.getRent(district);
-            
-            totalCount++;
-            
-            if (rent == null) { nullCount++; }
-            
-            System.out.format("%10s \t %12s \t %7s \t %s\n", postcode, district, rent, name);
+        List<Stop> stops = new ArrayList(s.getStops());
+        
+        Stop stop = stops.get(624);
+
+        DateFormat formatter = DateFormat.getTimeInstance();
+        
+        while (stop.getNextStop() != null)
+        {
+            String date = formatter.format(stop.getArrivalTime().getTime());
+            System.out.format("Station: %30s\t\tArrival time: %s\n", stop.getStation().getName(), date);
+            stop = stop.getNextStop();
         }
         
-        System.out.println(nullCount + " / " + totalCount);
+        String date = formatter.format(stop.getDepartureTime().getTime());
+        System.out.format("Station: %30s\t\tArrival time: %s\n", stop.getStation().getName(), date);
+        
+        
     }
 
 }
