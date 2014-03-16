@@ -14,6 +14,7 @@ public class StationNetworker
 {    
     private final Function<String, Station> atcoCodeToStation;
     
+    //TODO: Test all this as well.
     public StationNetworker(Function<String, Station> atcoCodeToStation)
     {
         this.atcoCodeToStation = atcoCodeToStation;
@@ -50,15 +51,15 @@ public class StationNetworker
     private Stop buildFirstStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
     {
         Stop result = new Stop();
-        
-        Station station = atcoCodeToStation.apply(link.getFrom().getStopPointRef().getValue());
-        result.setStation(station);
-        station.getStops().add(result);
 
         result.setArrivalTime((GregorianCalendar) time.clone());
         addFromWaitTime(time, link);
         result.setDepartureTime((GregorianCalendar) time.clone());        
     
+        Station station = atcoCodeToStation.apply(link.getFrom().getStopPointRef().getValue());
+        result.setStation(station);
+        station.getStops().add(result);
+        
         return result;
     }
     
@@ -69,15 +70,15 @@ public class StationNetworker
         assert refFromPreviousLink.equals(refFromNextLink) : String.format("Previous: %s\nNext: %s", refFromPreviousLink, refFromNextLink);
         
         Stop result = new Stop();
-        
-        Station station = atcoCodeToStation.apply(previousLink.getTo().getStopPointRef().getValue());
-        result.setStation(station);
-        station.getStops().add(result);
 
         result.setArrivalTime((GregorianCalendar) time.clone());
         addToWaitTime(time, previousLink);
         addFromWaitTime(time, nextLink);
         result.setDepartureTime((GregorianCalendar) time.clone());        
+        
+        Station station = atcoCodeToStation.apply(previousLink.getTo().getStopPointRef().getValue());
+        result.setStation(station);
+        station.getStops().add(result);
         
         return result;
     }
@@ -85,15 +86,15 @@ public class StationNetworker
     private Stop buildLastStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
     {
         Stop result = new Stop();
-        
-        Station station = atcoCodeToStation.apply(link.getTo().getStopPointRef().getValue());
-        result.setStation(station);
-        station.getStops().add(result);
 
         result.setArrivalTime((GregorianCalendar) time.clone());
         addToWaitTime(time, link);
         result.setDepartureTime((GregorianCalendar) time.clone());        
     
+        Station station = atcoCodeToStation.apply(link.getTo().getStopPointRef().getValue());
+        result.setStation(station);
+        station.getStops().add(result);
+        
         return result;
     }
     

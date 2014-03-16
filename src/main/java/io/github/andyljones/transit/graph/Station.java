@@ -1,20 +1,19 @@
 package io.github.andyljones.transit.graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class Station 
 {
     public String getName() { return name; }
     private final String name;
     
-    public Collection<Stop> getStops() { return stops; }
-    private final Collection<Stop> stops;
+    public NavigableSet<Stop> getStops() { return stops; }
+    private final NavigableSet<Stop> stops;
     
     public Station(String name)
     {
         this.name = name;
-        this.stops = new ArrayList<Stop>();
+        this.stops = new TreeSet<Stop>(new StopDepartureTimeComparator());
     }
 }

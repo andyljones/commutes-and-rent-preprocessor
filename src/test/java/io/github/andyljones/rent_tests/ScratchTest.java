@@ -19,7 +19,7 @@ import io.github.andyljones.transit.graph.Stop;
 
 public class ScratchTest {
     
-    //@Test
+    @Test
     public void scratch()
     {
         TransXChange root = TransXChangeUnmarshaller.getRootElement("/timetables/tfl_1-BAK-390106-y05.xml");
@@ -35,25 +35,15 @@ public class ScratchTest {
             networker.addJourney(journeyParts);
         }
         
-        Station s = finder.getStation("9400ZZLUWYC1");
-        System.out.println(s.getName());
-        System.out.println(s.getStops().size());
-
-        List<Stop> stops = new ArrayList(s.getStops());
-        
-        Stop stop = stops.get(624);
+        Station station = finder.getStation("9400ZZLUWYC1");
 
         DateFormat formatter = DateFormat.getTimeInstance();
         
-        while (stop.getNextStop() != null)
+        for (Stop stop : station.getStops())
         {
             String date = formatter.format(stop.getArrivalTime().getTime());
             System.out.format("Station: %30s\t\tArrival time: %s\n", stop.getStation().getName(), date);
-            stop = stop.getNextStop();
         }
-        
-        String date = formatter.format(stop.getDepartureTime().getTime());
-        System.out.format("Station: %30s\t\tArrival time: %s\n", stop.getStation().getName(), date);
         
         
     }
