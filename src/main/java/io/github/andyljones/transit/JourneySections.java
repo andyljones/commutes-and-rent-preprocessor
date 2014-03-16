@@ -11,15 +11,15 @@ import uk.org.transxchange.JourneyPatternSectionsStructure;
 
 public class JourneySections 
 {
-    public static void addToHolders(JourneyPatternSectionsStructure sectionsStructure, Collection<JourneyPartsHolder> holders) 
+    public static void addToHolders(final JourneyPatternSectionsStructure sectionsStructure, final Collection<JourneyPartsHolder> holders) 
     {
-        Map<String, JourneyPatternSectionStructure> sectionIdMap = buildSectionsMap(sectionsStructure);
+        final Map<String, JourneyPatternSectionStructure> sectionIdMap = buildSectionsMap(sectionsStructure);
         
-        for (JourneyPartsHolder holder : holders)
+        for (final JourneyPartsHolder holder : holders)
         {
-            List<JourneyPatternSectionRefStructure> sectionRefs = holder.patternStructure.getJourneyPatternSectionRefs();
+            final List<JourneyPatternSectionRefStructure> sectionRefs = holder.patternStructure.getJourneyPatternSectionRefs();
             
-            List<JourneyPatternSectionStructure> sections = sectionRefs.stream()
+            final List<JourneyPatternSectionStructure> sections = sectionRefs.stream()
                     .map(ref -> sectionIdMap.get(ref.getValue()))
                     .collect(Collectors.toList());
             
@@ -27,11 +27,11 @@ public class JourneySections
         }
     }
     
-    private static Map<String, JourneyPatternSectionStructure> buildSectionsMap(JourneyPatternSectionsStructure sectionsStructure)
+    private static Map<String, JourneyPatternSectionStructure> buildSectionsMap(final JourneyPatternSectionsStructure sectionsStructure)
     {
-        List<JourneyPatternSectionStructure> sections = sectionsStructure.getJourneyPatternSection();
+        final List<JourneyPatternSectionStructure> sections = sectionsStructure.getJourneyPatternSection();
         
-        Map<String, JourneyPatternSectionStructure> result = sections.stream().collect(Collectors.toMap(s -> s.getId(), s -> s));
+        final Map<String, JourneyPatternSectionStructure> result = sections.stream().collect(Collectors.toMap(s -> s.getId(), s -> s));
         
         return result;
     }

@@ -10,26 +10,26 @@ import uk.org.transxchange.ServicesStructure;
 
 public class JourneyPatterns 
 {
-    public static void addToHolders(ServicesStructure services, Collection<JourneyPartsHolder> holders) 
+    public static void addToHolders(final ServicesStructure services, final Collection<JourneyPartsHolder> holders) 
     {
-        Map<String, JourneyPatternStructure> patternIdMap = buildPatternsMap(services);
+        final Map<String, JourneyPatternStructure> patternIdMap = buildPatternsMap(services);
 
-        for (JourneyPartsHolder holder : holders)
+        for (final JourneyPartsHolder holder : holders)
         {
-            String patternRef = holder.journeyStructure.getJourneyPatternRef().getValue();
-            JourneyPatternStructure pattern = patternIdMap.get(patternRef);
+            final String patternRef = holder.journeyStructure.getJourneyPatternRef().getValue();
+            final JourneyPatternStructure pattern = patternIdMap.get(patternRef);
             
             holder.patternStructure = pattern;
         }
     }
 
-    private static Map<String, JourneyPatternStructure> buildPatternsMap(ServicesStructure services) 
+    private static Map<String, JourneyPatternStructure> buildPatternsMap(final ServicesStructure services) 
     {
-        List<JourneyPatternStructure> patterns = services.getService().stream()
+        final List<JourneyPatternStructure> patterns = services.getService().stream()
                 .flatMap(s -> s.getStandardService().getJourneyPattern().stream())
                 .collect(Collectors.toList());
         
-        Map<String, JourneyPatternStructure> result = patterns.stream().collect(Collectors.toMap(p -> p.getId(), p -> p));
+        final Map<String, JourneyPatternStructure> result = patterns.stream().collect(Collectors.toMap(p -> p.getId(), p -> p));
                 
         return result;
 

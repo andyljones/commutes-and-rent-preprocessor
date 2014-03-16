@@ -8,11 +8,11 @@ import uk.org.transxchange.JourneyPatternTimingLinkStructure;
 
 public class JourneyLinks 
 {
-    public static void addToHolders(Collection<JourneyPartsHolder> holders)
+    public static void addToHolders(final Collection<JourneyPartsHolder> holders)
     {
-        for (JourneyPartsHolder holder : holders)
+        for (final JourneyPartsHolder holder : holders)
         {
-            List<JourneyPatternTimingLinkStructure> links = holder.sectionStructures.stream()
+            final List<JourneyPatternTimingLinkStructure> links = holder.sectionStructures.stream()
                     .flatMap(s -> s.getJourneyPatternTimingLink().stream())
                     .collect(Collectors.toList());
 

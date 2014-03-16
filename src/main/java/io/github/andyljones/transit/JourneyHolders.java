@@ -21,7 +21,7 @@ public class JourneyHolders
         
         return result;
     }
-
+ 
     private static Collection<JourneyPartsHolder> buildHolders(VehicleJourneysStructure journeys) 
     {
         Collection<AbstractVehicleJourneyStructure> abstractJournies = journeys.getVehicleJourneyAndFlexibleVehicleJourney();
