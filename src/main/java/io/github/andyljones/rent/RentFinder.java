@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.csvreader.CsvReader;
 
@@ -16,16 +17,13 @@ import com.csvreader.CsvReader;
  */
 public class RentFinder 
 {
-    /**
-     * The average two bedroom rent for the specified district code.
-     * @param district A local authority district code
-     * @return The average rent.
-     */
-    public String getRent(String district) { return rentMap.get(district); }
-    private final Map<String, String> rentMap;
+    public RentStats getRent(String district) { return rentMap.get(district); }
+    private final Map<String, RentStats> rentMap;
     
     private static final int DISTRICT_COLUMN_INDEX = 1;
-    private static final int AVERAGE_RENT_COLUMN_INDEX = 4;
+    private static final int LOWER_QUARTILE_RENT_COLUMN_INDEX = 5;
+    private static final int MEDIAN_RENT_COLUMN_INDEX = 6;
+    private static final int UPPER_QUARTILE_RENT_COLUMN_INDEX = 7;
     
     /**
      * Construct a rent lookup using the csv data at the specified path.
@@ -39,9 +37,9 @@ public class RentFinder
         rentMap = buildDistrictToRentMap(csvReader);
     }   
 
-    private static Map<String, String> buildDistrictToRentMap(CsvReader csvReader) 
+    private static Map<String, RentStats> buildDistrictToRentMap(CsvReader csvReader) 
     {
-        final Map<String, String> result = new HashMap<>();
+        final Map<String, RentStats> result = new HashMap<>();
         try 
         {            
             csvReader.skipRecord(); // Skip header
@@ -49,14 +47,34 @@ public class RentFinder
             while (csvReader.readRecord())
             {
                 final String district = csvReader.get(DISTRICT_COLUMN_INDEX);
-                final String rent = csvReader.get(AVERAGE_RENT_COLUMN_INDEX);
                 
-                result.put(district, rent);
+                final Optional<Integer> lowerQuartileRent = tryParse(csvReader.get(LOWER_QUARTILE_RENT_COLUMN_INDEX));
+                final Optional<Integer> medianRent = tryParse(csvReader.get(MEDIAN_RENT_COLUMN_INDEX));
+                final Optional<Integer> upperQuartileRent = tryParse(csvReader.get(UPPER_QUARTILE_RENT_COLUMN_INDEX));
+                
+                final RentStats rentStats = new RentStats(lowerQuartileRent, medianRent, upperQuartileRent);
+                
+                result.put(district, rentStats);
             }
         }
         catch (IOException ioe)
         {
             System.err.println("Reading CSV file failed!");
+        }
+        
+        return result;
+    }
+    
+    private static Optional<Integer> tryParse(String rentFigure)
+    {
+        Optional<Integer> result;
+        try
+        {
+            result = Optional.of(Integer.parseInt(rentFigure));
+        }
+        catch (NumberFormatException nfe)
+        {
+            result = Optional.empty();
         }
         
         return result;

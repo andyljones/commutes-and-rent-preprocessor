@@ -32,8 +32,6 @@ public class StationPostcodeFinder {
         final CsvReader csvReader = new CsvReader(stream, Charset.defaultCharset());
         
         nameToPostcodeMap = buildNameToPostcodeMap(csvReader);
-        
-        System.out.println(nameToPostcodeMap.size());
     }
 
     private static Map<String, String> buildNameToPostcodeMap(CsvReader csvReader) 

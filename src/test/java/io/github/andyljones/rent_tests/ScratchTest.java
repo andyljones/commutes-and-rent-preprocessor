@@ -23,6 +23,9 @@ import org.junit.Test;
 import de.micromata.opengis.kml.v_2_2_0.Kml;
 import uk.org.transxchange.StopPointStructure;
 import uk.org.transxchange.TransXChange;
+import io.github.andyljones.rent.DistrictFinder;
+import io.github.andyljones.rent.RentFinder;
+import io.github.andyljones.rent.RentStats;
 import io.github.andyljones.rent.StationPostcodeFinder;
 import io.github.andyljones.transit.DepartureTimeTableSerializer;
 import io.github.andyljones.transit.DepartureTimeTables;
@@ -45,14 +48,15 @@ public class ScratchTest {
         
         Collection<Station> stations = new StationFinder(getStopPoints(roots)).getStations();
         
-        StationPostcodeFinder finder = new StationPostcodeFinder("station-locations/tube-postcodes.csv");
+        StationPostcodeFinder postcodeFinder = new StationPostcodeFinder("station-locations/tube-postcodes.csv");
+        DistrictFinder districtFinder = new DistrictFinder("local-authority-districts/local-authority-districts.csv");
+        RentFinder rentFinder = new RentFinder("rents/131212-Table2.3.csv");
         
         for (Station station : stations)
         {
-            if (finder.getPostcode(station.getName()) == null)
-            {
-                System.out.format("%s,\n", station.getName(), finder.getPostcode(station.getName()));
-            }
+            RentStats stats = rentFinder.getRent(districtFinder.getDistrict(postcodeFinder.getPostcode(station.getName())));
+            
+            System.out.format("%-30s \t %20s \t %20s \t %20s\n", station.getName(), stats.getLowerQuartile(), stats.getMedian(), stats.getUpperQuartile());
         }
     }
     
