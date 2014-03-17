@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import uk.org.transxchange.StopPointStructure;
 import uk.org.transxchange.TransXChange;
-import io.github.andyljones.transit.EarliestArrivalCalculator;
+import io.github.andyljones.transit.LatestDepartureCalculator;
 import io.github.andyljones.transit.JourneyHolders;
 import io.github.andyljones.transit.JourneyPartsHolder;
 import io.github.andyljones.transit.StationFinder;
@@ -67,11 +67,11 @@ public class ScratchTest {
         }
         
         
-        Station station = finder.getStation("9400ZZLUWYC1");
-        GregorianCalendar time = new GregorianCalendar(1970, 0, 1, 11, 8, 0);
+        Station station = finder.getStation("9400ZZLUOXC3");
+        GregorianCalendar time = new GregorianCalendar(1970, 0, 1, 9, 0, 0);
         
-        EarliestArrivalCalculator calc = new EarliestArrivalCalculator(station, time);
-        Map<Station, GregorianCalendar> results = calc.getArrivalTimes();
+        LatestDepartureCalculator calc = new LatestDepartureCalculator(station, time);
+        Map<Station, GregorianCalendar> results = calc.getDepartureTimes();
         
         
         Comp comp = new Comp(results);
@@ -85,7 +85,7 @@ public class ScratchTest {
             GregorianCalendar t = results.get(s);
             
             String arrivalTime = formatter.format(t.getTime());
-            System.out.format("Station: %30s\t\tArrival time  : %s\n", s.getName(), arrivalTime);
+            System.out.format("Station: %30s\t\tDeparture time  : %s\n", s.getName(), arrivalTime);
         }
         
         System.out.println(sorted.size());
@@ -103,7 +103,7 @@ public class ScratchTest {
         @Override
         public int compare(Station o1, Station o2) 
         {
-            return ordering.get(o1).compareTo(ordering.get(o2));
+            return ordering.get(o2).compareTo(ordering.get(o1));
         }
         
     }

@@ -34,16 +34,14 @@ public class StationNetworker
             JourneyPatternTimingLinkStructure previousLink = links.get(i-1);
             JourneyPatternTimingLinkStructure nextLink = links.get(i);
             
-            Stop newStop = buildStopAndUpdateTime(currentTime, previousLink, nextLink);
+            Stop newStop = buildStopAndUpdateTime(currentTime, previousStop, previousLink, nextLink);
             StationNetworkerUtilities.addRunTime(currentTime, previousLink);
             
-            previousStop.initializeNextStop(newStop);
             previousStop = newStop;
         }
         
         JourneyPatternTimingLinkStructure lastLink = links.get(links.size() - 1);
-        Stop lastStop = buildLastStopAndUpdateTime(currentTime, lastLink);
-        previousStop.initializeNextStop(lastStop);
+        Stop lastStop = buildLastStopAndUpdateTime(currentTime, previousStop, lastLink);
     }
 
     private Stop buildFirstStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
@@ -54,12 +52,12 @@ public class StationNetworker
         StationNetworkerUtilities.addFromWaitTime(time, link);
         GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);       
 
-        Stop result = new Stop(station, arrivalTime, departureTime);
+        Stop result = new Stop(station, null, arrivalTime, departureTime);
         station.getStops().add(result);
         return result;
     }
     
-    private Stop buildStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure previousLink, JourneyPatternTimingLinkStructure nextLink) 
+    private Stop buildStopAndUpdateTime(GregorianCalendar time, Stop previousStop, JourneyPatternTimingLinkStructure previousLink, JourneyPatternTimingLinkStructure nextLink) 
     {
         StationNetworkerUtilities.assertLinksAreConsecutive(previousLink, nextLink);
         
@@ -70,13 +68,13 @@ public class StationNetworker
         StationNetworkerUtilities.addFromWaitTime(time, nextLink);
         GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);  
         
-        Stop result = new Stop(station, arrivalTime, departureTime);
+        Stop result = new Stop(station, previousStop, arrivalTime, departureTime);
         station.getStops().add(result);
         return result;
     }
     
     
-    private Stop buildLastStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
+    private Stop buildLastStopAndUpdateTime(GregorianCalendar time, Stop previousStop, JourneyPatternTimingLinkStructure link) 
     {
         Station station = atcoCodeToStationMap.apply(link.getTo().getStopPointRef().getValue());
         
@@ -84,7 +82,7 @@ public class StationNetworker
         StationNetworkerUtilities.addToWaitTime(time, link);
         GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);       
         
-        Stop result = new Stop(station, arrivalTime, departureTime);
+        Stop result = new Stop(station, previousStop, arrivalTime, departureTime);
         station.getStops().add(result);
         return result;
     }

@@ -14,28 +14,15 @@ public class Stop
     public Station getStation() { return station; }
     private Station station;
 
-    public Optional<Stop> getNextStop() { return nextStop; }
-    private Optional<Stop> nextStop = Optional.empty();
+    public Optional<Stop> getPreviousStop() { return previousStop; }
+    private Optional<Stop> previousStop;
     
-    public Stop(Station station, GregorianCalendar arrivalTime, GregorianCalendar departureTime)
+    public Stop(Station station, Stop previousStop, GregorianCalendar arrivalTime, GregorianCalendar departureTime)
     {
         this.station = station;
+        this.previousStop = Optional.ofNullable(previousStop);
         this.arrivalTime = arrivalTime;
         this.departureTime = departureTime;
-    }
-
-    public boolean initializeNextStop(Stop nextStop) 
-    { 
-        if (this.nextStop.isPresent())
-        {
-            return false;
-        }
-        else
-        {
-            this.nextStop = Optional.ofNullable(nextStop);
-            return true;
-        }
-    }
-    
+    }   
     
 }

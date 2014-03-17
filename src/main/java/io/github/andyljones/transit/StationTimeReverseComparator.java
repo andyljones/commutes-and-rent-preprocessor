@@ -2,11 +2,11 @@ package io.github.andyljones.transit;
 
 import java.util.Comparator;
 
-public class StationTimeComparator implements Comparator<StationTime>
+public class StationTimeReverseComparator implements Comparator<StationTime>
 {
     @Override
     public int compare(StationTime x, StationTime y) 
     {
-        return x.getTime().compareTo(y.getTime());
+        return y.getTime().compareTo(x.getTime());
     }
 }

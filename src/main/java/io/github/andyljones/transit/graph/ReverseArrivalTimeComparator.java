@@ -2,12 +2,12 @@ package io.github.andyljones.transit.graph;
 
 import java.util.Comparator;
 
-public class StopDepartureTimeComparator implements Comparator<Stop>
+public class ReverseArrivalTimeComparator implements Comparator<Stop>
 {
     @Override
     public int compare(Stop x, Stop y) 
     {
-        return x.getDepartureTime().compareTo(y.getDepartureTime());
+        return y.getArrivalTime().compareTo(x.getArrivalTime());
     }
     
 }
