@@ -1,5 +1,6 @@
 package io.github.andyljones.transit;
 
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Function;
@@ -18,7 +19,12 @@ public class StationNetworker
         this.atcoCodeToStationMap = atcoCodeToStation;
     }
     
-    public void addJourney(JourneyPartsHolder journeyParts) 
+    public void addJournies(Collection<JourneyPartsHolder> journeyParts)
+    {
+        journeyParts.stream().forEach(holder -> addJourney(holder));
+    }
+    
+    private void addJourney(JourneyPartsHolder journeyParts) 
     {
         List<JourneyPatternTimingLinkStructure> links = journeyParts.linkStructures;
         
