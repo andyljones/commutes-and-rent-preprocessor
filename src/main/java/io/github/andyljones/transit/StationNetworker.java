@@ -4,20 +4,18 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.xml.datatype.Duration;
-
 import uk.org.transxchange.JourneyPatternTimingLinkStructure;
 import io.github.andyljones.transit.graph.Station;
 import io.github.andyljones.transit.graph.Stop;
 
 public class StationNetworker 
 {    
-    private final Function<String, Station> atcoCodeToStation;
+    private final Function<String, Station> atcoCodeToStationMap;
     
     //TODO: Test all this as well.
     public StationNetworker(Function<String, Station> atcoCodeToStation)
     {
-        this.atcoCodeToStation = atcoCodeToStation;
+        this.atcoCodeToStationMap = atcoCodeToStation;
     }
     
     public void addJourney(JourneyPartsHolder journeyParts) 
@@ -28,7 +26,7 @@ public class StationNetworker
         
         JourneyPatternTimingLinkStructure firstLink = links.get(0);
         Stop firstStop = buildFirstStopAndUpdateTime(currentTime, firstLink);
-        addRunTime(currentTime, firstLink);
+        StationNetworkerUtilities.addRunTime(currentTime, firstLink);
         
         Stop previousStop = firstStop;
         for (int i = 1; i < links.size(); i++)
@@ -37,86 +35,57 @@ public class StationNetworker
             JourneyPatternTimingLinkStructure nextLink = links.get(i);
             
             Stop newStop = buildStopAndUpdateTime(currentTime, previousLink, nextLink);
-            addRunTime(currentTime, previousLink);
+            StationNetworkerUtilities.addRunTime(currentTime, previousLink);
             
-            previousStop.setNextStop(newStop);
+            previousStop.initializeNextStop(newStop);
             previousStop = newStop;
         }
         
         JourneyPatternTimingLinkStructure lastLink = links.get(links.size() - 1);
         Stop lastStop = buildLastStopAndUpdateTime(currentTime, lastLink);
-        previousStop.setNextStop(lastStop);
+        previousStop.initializeNextStop(lastStop);
     }
 
     private Stop buildFirstStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
     {
-        Stop result = new Stop();
+        Station station = atcoCodeToStationMap.apply(link.getFrom().getStopPointRef().getValue());
+     
+        GregorianCalendar arrivalTime = StationNetworkerUtilities.copy(time);
+        StationNetworkerUtilities.addFromWaitTime(time, link);
+        GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);       
 
-        result.setArrivalTime((GregorianCalendar) time.clone());
-        addFromWaitTime(time, link);
-        result.setDepartureTime((GregorianCalendar) time.clone());        
-    
-        Station station = atcoCodeToStation.apply(link.getFrom().getStopPointRef().getValue());
-        result.setStation(station);
+        Stop result = new Stop(station, arrivalTime, departureTime);
         station.getStops().add(result);
-        
         return result;
     }
     
     private Stop buildStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure previousLink, JourneyPatternTimingLinkStructure nextLink) 
     {
-        String refFromPreviousLink = previousLink.getTo().getStopPointRef().getValue();
-        String refFromNextLink = nextLink.getFrom().getStopPointRef().getValue();
-        assert refFromPreviousLink.equals(refFromNextLink) : String.format("Previous: %s\nNext: %s", refFromPreviousLink, refFromNextLink);
+        StationNetworkerUtilities.assertLinksAreConsecutive(previousLink, nextLink);
         
-        Stop result = new Stop();
-
-        result.setArrivalTime((GregorianCalendar) time.clone());
-        addToWaitTime(time, previousLink);
-        addFromWaitTime(time, nextLink);
-        result.setDepartureTime((GregorianCalendar) time.clone());        
+        Station station = atcoCodeToStationMap.apply(previousLink.getTo().getStopPointRef().getValue());
         
-        Station station = atcoCodeToStation.apply(previousLink.getTo().getStopPointRef().getValue());
-        result.setStation(station);
+        GregorianCalendar arrivalTime = StationNetworkerUtilities.copy(time);
+        StationNetworkerUtilities.addToWaitTime(time, previousLink);
+        StationNetworkerUtilities.addFromWaitTime(time, nextLink);
+        GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);  
+        
+        Stop result = new Stop(station, arrivalTime, departureTime);
         station.getStops().add(result);
-        
         return result;
     }
+    
     
     private Stop buildLastStopAndUpdateTime(GregorianCalendar time, JourneyPatternTimingLinkStructure link) 
     {
-        Stop result = new Stop();
-
-        result.setArrivalTime((GregorianCalendar) time.clone());
-        addToWaitTime(time, link);
-        result.setDepartureTime((GregorianCalendar) time.clone());        
-    
-        Station station = atcoCodeToStation.apply(link.getTo().getStopPointRef().getValue());
-        result.setStation(station);
-        station.getStops().add(result);
+        Station station = atcoCodeToStationMap.apply(link.getTo().getStopPointRef().getValue());
         
+        GregorianCalendar arrivalTime = StationNetworkerUtilities.copy(time);
+        StationNetworkerUtilities.addToWaitTime(time, link);
+        GregorianCalendar departureTime = StationNetworkerUtilities.copy(time);       
+        
+        Stop result = new Stop(station, arrivalTime, departureTime);
+        station.getStops().add(result);
         return result;
     }
-    
-    private static void addRunTime(GregorianCalendar currentTime, JourneyPatternTimingLinkStructure link) 
-    {
-        Duration runTime = link.getRunTime();
-        if (runTime != null) { runTime.addTo(currentTime); }
-    }
-    
-    private static void addFromWaitTime(GregorianCalendar currentTime, JourneyPatternTimingLinkStructure link) 
-    {
-        Duration waitTime = link.getFrom().getWaitTime();
-        if (waitTime != null) { waitTime.addTo(currentTime); }
-    }
-    
-    private static void addToWaitTime(GregorianCalendar currentTime, JourneyPatternTimingLinkStructure link) 
-    {
-        Duration waitTime = link.getTo().getWaitTime();
-        if (waitTime != null) { waitTime.addTo(currentTime); }
-    }
-
-
-   
-    
 }
