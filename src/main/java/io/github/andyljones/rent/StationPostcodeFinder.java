@@ -1,15 +1,13 @@
 package io.github.andyljones.rent;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import de.micromata.opengis.kml.v_2_2_0.Document;
-import de.micromata.opengis.kml.v_2_2_0.Kml;
-import de.micromata.opengis.kml.v_2_2_0.Placemark;
+import com.csvreader.CsvReader;
 
 /**
  * Maps station names to postcodes.
@@ -18,57 +16,54 @@ import de.micromata.opengis.kml.v_2_2_0.Placemark;
  */
 public class StationPostcodeFinder {
     
-    public String getPostcode(String stationName) { return nameToPostcodeMap.get(stationName); }
+    public String getPostcode(String stationName) { return nameToPostcodeMap.get(normalizeName(stationName)); }
     private final Map<String, String> nameToPostcodeMap;
-     
-    private static final Pattern POSTCODE_REGEX = Pattern.compile("^((GIR 0AA)|((([A-PR-UWYZ][A-HK-Y]?[0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRV-Y]))) *[0-9][ABD-HJLNP-UW-Z]{2}))$");
-    private static final String DEFAULT_POSTCODE = "SW1H 0BD";
+
+    private static final int STATION_NAME_COLUMN_INDEX = 0;
+    private static final int POSTCODE_COLUMN_INDEX = 1;
     
     /**
-     * Construct a getPostcode function using the specified location data. Discards invalid postcodes.
+     * Construct a getPostcode function using the specified location data.
      * @param stationLocations Station location data.
      */
-    public StationPostcodeFinder(final Kml stationLocations)
+    public StationPostcodeFinder(String postcodeFilePath)
     {
-        nameToPostcodeMap = buildNameToPostcodeMap(stationLocations);
-    }
-    
-    private static Map<String, String> buildNameToPostcodeMap(final Kml locations) 
-    {
-        final Document document = (Document) locations.getFeature();
-        final List<Placemark> placemarks = document.getFeature().stream().map(feature -> (Placemark) feature).collect(Collectors.toList());
+        final InputStream stream = this.getClass().getClassLoader().getResourceAsStream(postcodeFilePath);
+        final CsvReader csvReader = new CsvReader(stream, Charset.defaultCharset());
         
-        final Map<String, String> result = new HashMap<>();
-        for (Placemark placemark : placemarks)
-        {
-            final String name = extractName(placemark.getName());
-            final String postcode = extractPostcode(placemark.getDescription());
-            
-            if (validatePostcode(postcode))
-            {
-                final String sevenLetterPostcode = formatToSevenCharacters(postcode);
+        nameToPostcodeMap = buildNameToPostcodeMap(csvReader);
+        
+        System.out.println(nameToPostcodeMap.size());
+    }
 
-                result.put(name, sevenLetterPostcode);
+    private static Map<String, String> buildNameToPostcodeMap(CsvReader csvReader) 
+    {
+        final Map<String, String> result = new HashMap<>();
+        try 
+        { 
+            while (csvReader.readRecord())
+            {
+                final String stationName = normalizeName(csvReader.get(STATION_NAME_COLUMN_INDEX));
+                final String postcode = formatToSevenCharacters(csvReader.get(POSTCODE_COLUMN_INDEX));
+                
+                result.put(stationName, postcode);
             }
+        }
+        catch (IOException ioe)
+        {
+            System.err.println("Reading CSV file failed!");
         }
         
         return result;
     }
 
-    private static String extractName(final String fullName)
+    private static String normalizeName(String stationName) 
     {
-        final String[] nameComponents = fullName.split(" [Ss]tation");
-        final String shortName = nameComponents[0].trim();      
+                
+        String[] nameComponents = stationName.split("( Station| \\()");
+        String normalizedName = nameComponents[0].replaceAll("\'", "").trim();
         
-        return shortName;
-    }
-    
-    private static String extractPostcode(final String address) 
-    {
-        final String[] addressComponents = address.split(", ");
-        final String postcode = addressComponents[addressComponents.length - 1].trim();
-        
-        return postcode;
+        return normalizedName;
     }
 
     private static String formatToSevenCharacters(String postcode) 
@@ -88,13 +83,5 @@ public class StationPostcodeFinder {
         }
         
         return result;
-    }
-
-    private static boolean validatePostcode(String postcode) 
-    {
-        final boolean wellFormatted = POSTCODE_REGEX.matcher(postcode).matches();
-        final boolean notDefault = !postcode.equals(DEFAULT_POSTCODE);
-        
-        return wellFormatted && notDefault;
     }
 }
