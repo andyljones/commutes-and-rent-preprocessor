@@ -1,19 +1,19 @@
 package io.github.andyljones.transit.graph;
 
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Station 
 {
     public String getName() { return name; }
     private final String name;
     
-    public NavigableSet<Stop> getStops() { return stops; }
-    private final NavigableSet<Stop> stops;
+    public Queue<Stop> getStops() { return stops; }
+    private final Queue<Stop> stops;
     
     public Station(String name)
     {
         this.name = name;
-        this.stops = new TreeSet<Stop>(new StopDepartureTimeComparator());
+        this.stops = new PriorityQueue<Stop>(new StopDepartureTimeComparator());
     }
 }

@@ -43,8 +43,8 @@ public class EarliestArrivalCalculator
 
     private void process(StationTime stationTime) 
     {
-        NavigableSet<Stop> stops = stationTime.getStation().getStops();
-        Collection<Stop> upcomingStops = getStopsAfter(stops, stationTime.getTime());
+        Queue<Stop> stops = stationTime.getStation().getStops();
+        Collection<Stop> upcomingStops = getStopsDepartingAfterTime(stops, stationTime.getTime());
         
         for (Stop stop : upcomingStops)
         {
@@ -79,11 +79,13 @@ public class EarliestArrivalCalculator
         }
     }
 
-    private static Collection<Stop> getStopsAfter(NavigableSet<Stop> stops, GregorianCalendar time) 
+    private static Collection<Stop> getStopsDepartingAfterTime(Queue<Stop> stops, GregorianCalendar time) 
     {
-        Stop stopAtTargetTime = new Stop(null, null, time);
+        Collection<Stop> stopsAfterTargetTime = stops.stream()
+                .filter(stop -> stop.getArrivalTime().compareTo(time) >= 0)
+                .collect(Collectors.toList());
         
-        return stops.tailSet(stopAtTargetTime, true);
+        return stopsAfterTargetTime;
     }
     
     public Map<Station, GregorianCalendar> getArrivalTimes() 

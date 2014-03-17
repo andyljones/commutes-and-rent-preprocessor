@@ -1,5 +1,9 @@
 package io.github.andyljones.transit_test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import uk.org.transxchange.StopPointStructure;
 import uk.org.transxchange.TransXChange;
 import io.github.andyljones.transit.EarliestArrivalCalculator;
 import io.github.andyljones.transit.JourneyHolders;
@@ -28,22 +34,41 @@ public class ScratchTest {
     @Test
     public void scratch()
     {
-        TransXChange root = TransXChangeUnmarshaller.getRootElement("/timetables/tfl_1-BAK-390106-y05.xml");
-        
-        Collection<JourneyPartsHolder> result = JourneyHolders.asHolders(root);
-        
-        
-        StationFinder finder = new StationFinder(root.getStopPoints().getStopPoint());
-        StationNetworker networker = new StationNetworker(finder::getStation);
-        
-        for (JourneyPartsHolder journeyParts : result)
+        Collection<TransXChange> roots = new ArrayList<>();
+        Collection<JourneyPartsHolder> holders = new ArrayList<>();
+        Collection<StopPointStructure> stopPoints = new ArrayList<>();
+        try
         {
-            networker.addJourney(journeyParts);
+            Path path = Paths.get("src/main/resources/timetables");
+            Collection<Path> paths = Files.list(path).collect(Collectors.toList());
+            //Collection<Path> paths = new ArrayList<Path>() {{ add(Paths.get("tfl_1-VIC_-350112-y05.xml")); }};
+            
+            for (Path p : paths)
+            {
+                System.out.println(p.toString());
+                
+                TransXChange root = TransXChangeUnmarshaller.getRootElement("/timetables/" + p.getFileName()); 
+                roots.add(root);
+                holders.addAll(JourneyHolders.asHolders(root));
+                stopPoints.addAll(root.getStopPoints().getStopPoint());
+            }
+        }
+        catch (Exception ioe)
+        {
+            
         }
         
+        StationFinder finder = new StationFinder(stopPoints);
+        StationNetworker networker = new StationNetworker(finder::getStation);
+        
+        for (JourneyPartsHolder holder : holders)
+        {
+            networker.addJourney(holder);
+        }
+        
+        
         Station station = finder.getStation("9400ZZLUWYC1");
-        GregorianCalendar time = new ArrayList<Stop>(station.getStops()).get(100).getArrivalTime();
-
+        GregorianCalendar time = new GregorianCalendar(1970, 0, 1, 11, 8, 0);
         
         EarliestArrivalCalculator calc = new EarliestArrivalCalculator(station, time);
         Map<Station, GregorianCalendar> results = calc.getArrivalTimes();
@@ -62,6 +87,8 @@ public class ScratchTest {
             String arrivalTime = formatter.format(t.getTime());
             System.out.format("Station: %30s\t\tArrival time  : %s\n", s.getName(), arrivalTime);
         }
+        
+        System.out.println(sorted.size());
     }
     
     private class Comp implements Comparator<Station>
