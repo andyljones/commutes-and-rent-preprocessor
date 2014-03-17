@@ -3,12 +3,18 @@ package io.github.andyljones.transit_test;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import uk.org.transxchange.TransXChange;
+import io.github.andyljones.transit.EarliestArrivalCalculator;
 import io.github.andyljones.transit.JourneyHolders;
 import io.github.andyljones.transit.JourneyPartsHolder;
 import io.github.andyljones.transit.StationFinder;
@@ -19,7 +25,7 @@ import io.github.andyljones.transit.graph.Stop;
 
 public class ScratchTest {
     
-    //@Test
+    @Test
     public void scratch()
     {
         TransXChange root = TransXChangeUnmarshaller.getRootElement("/timetables/tfl_1-BAK-390106-y05.xml");
@@ -36,22 +42,42 @@ public class ScratchTest {
         }
         
         Station station = finder.getStation("9400ZZLUWYC1");
-        
+        GregorianCalendar time = new ArrayList<Stop>(station.getStops()).get(100).getArrivalTime();
 
+        
+        EarliestArrivalCalculator calc = new EarliestArrivalCalculator(station, time);
+        Map<Station, GregorianCalendar> results = calc.getArrivalTimes();
+        
+        
+        Comp comp = new Comp(results);
+        Collection<Station> sorted = results.keySet().stream().sorted(comp).collect(Collectors.toList());
+        
         DateFormat formatter = DateFormat.getTimeInstance();
         
-        Stop stop = station.getStops().first();
-        while (stop.getNextStop().isPresent())
+        System.out.println(station.getName() + ", " + formatter.format(time.getTime()));
+        for (Station s : sorted)
         {
-            String arrivalTime = formatter.format(stop.getArrivalTime().getTime());
-            System.out.format("Station: %30s\t\tArrival time  : %s\n", stop.getStation().getName(), arrivalTime);
+            GregorianCalendar t = results.get(s);
             
-            String departureTime = formatter.format(stop.getDepartureTime().getTime());
-            System.out.format("Station: %30s\t\tDeparture time: %s\n", stop.getStation().getName(), departureTime);
-            
-            stop = stop.getNextStop().get();
+            String arrivalTime = formatter.format(t.getTime());
+            System.out.format("Station: %30s\t\tArrival time  : %s\n", s.getName(), arrivalTime);
+        }
+    }
+    
+    private class Comp implements Comparator<Station>
+    {
+        private Map<Station, GregorianCalendar> ordering;
+        
+        public Comp(Map<Station, GregorianCalendar> ordering)
+        {
+            this.ordering = ordering;
         }
         
+        @Override
+        public int compare(Station o1, Station o2) 
+        {
+            return ordering.get(o1).compareTo(ordering.get(o2));
+        }
         
     }
 
