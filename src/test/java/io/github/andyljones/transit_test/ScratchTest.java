@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.junit.Test;
 
 import uk.org.transxchange.StopPointStructure;
 import uk.org.transxchange.TransXChange;
+import io.github.andyljones.transit.DepartureTimeTableSerializer;
 import io.github.andyljones.transit.LatestDepartureCalculator;
 import io.github.andyljones.transit.JourneyHolders;
 import io.github.andyljones.transit.JourneyPartsHolder;
@@ -41,7 +43,7 @@ public class ScratchTest {
         {
             Path path = Paths.get("src/main/resources/timetables");
             Collection<Path> paths = Files.list(path).collect(Collectors.toList());
-            //Collection<Path> paths = new ArrayList<Path>() {{ add(Paths.get("tfl_1-VIC_-350112-y05.xml")); }};
+            //paths = new ArrayList<Path>() {{ add(Paths.get("tfl_1-VIC_-350112-y05.xml")); }};
             
             for (Path p : paths)
             {
@@ -66,29 +68,43 @@ public class ScratchTest {
             networker.addJourney(holder);
         }
         
-        
-        Station station = finder.getStation("9400ZZLUOXC3");
         GregorianCalendar time = new GregorianCalendar(1970, 0, 1, 9, 0, 0);
         
-        LatestDepartureCalculator calc = new LatestDepartureCalculator(station, time);
-        Map<Station, GregorianCalendar> results = calc.getDepartureTimes();
-        
-        
-        Comp comp = new Comp(results);
-        Collection<Station> sorted = results.keySet().stream().sorted(comp).collect(Collectors.toList());
-        
-        DateFormat formatter = DateFormat.getTimeInstance();
-        
-        System.out.println(station.getName() + ", " + formatter.format(time.getTime()));
-        for (Station s : sorted)
+        Map<Station, Map<Station, GregorianCalendar>> departureTimes = new HashMap<>();
+        for (Station station : finder.getStations())
         {
-            GregorianCalendar t = results.get(s);
+            System.out.println("Processing station " + station.getName());
+            LatestDepartureCalculator calc = new LatestDepartureCalculator(station, time);
+            Map<Station, GregorianCalendar> result = calc.getDepartureTimes();
             
-            String arrivalTime = formatter.format(t.getTime());
-            System.out.format("Station: %30s\t\tDeparture time  : %s\n", s.getName(), arrivalTime);
+            departureTimes.put(station, result);
         }
         
-        System.out.println(sorted.size());
+        DepartureTimeTableSerializer.serialize(time, new ArrayList<>(finder.getStations()), departureTimes, "testOutput.json");
+
+        
+//        Station station = finder.getStation("9400ZZLUOXC3");
+//        GregorianCalendar time = new GregorianCalendar(1970, 0, 1, 9, 0, 0);
+//        
+//        LatestDepartureCalculator calc = new LatestDepartureCalculator(station, time);
+//        Map<Station, GregorianCalendar> results = calc.getDepartureTimes();
+//        
+//        
+//        Comp comp = new Comp(results);
+//        Collection<Station> sorted = results.keySet().stream().sorted(comp).collect(Collectors.toList());
+//        
+//        DateFormat formatter = DateFormat.getTimeInstance();
+//        
+//        System.out.println(station.getName() + ", " + formatter.format(time.getTime()));
+//        for (Station s : sorted)
+//        {
+//            GregorianCalendar t = results.get(s);
+//            
+//            String arrivalTime = formatter.format(t.getTime());
+//            System.out.format("Station: %30s\t\tDeparture time  : %s\n", s.getName(), arrivalTime);
+//        }
+//        
+//        System.out.println(sorted.size());
     }
     
     private class Comp implements Comparator<Station>
