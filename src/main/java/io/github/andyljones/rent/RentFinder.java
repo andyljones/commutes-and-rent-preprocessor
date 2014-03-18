@@ -17,8 +17,8 @@ import com.csvreader.CsvReader;
  */
 public class RentFinder 
 {
-    public RentStats getRent(String district) { return rentMap.get(district); }
-    private final Map<String, RentStats> rentMap;
+    public RentStatistic getRent(String district) { return rentMap.get(district); }
+    private final Map<String, RentStatistic> rentMap;
     
     private static final int DISTRICT_COLUMN_INDEX = 1;
     private static final int LOWER_QUARTILE_RENT_COLUMN_INDEX = 5;
@@ -37,9 +37,9 @@ public class RentFinder
         rentMap = buildDistrictToRentMap(csvReader);
     }   
 
-    private static Map<String, RentStats> buildDistrictToRentMap(CsvReader csvReader) 
+    private static Map<String, RentStatistic> buildDistrictToRentMap(CsvReader csvReader) 
     {
-        final Map<String, RentStats> result = new HashMap<>();
+        final Map<String, RentStatistic> result = new HashMap<>();
         try 
         {            
             csvReader.skipRecord(); // Skip header
@@ -52,7 +52,7 @@ public class RentFinder
                 final Optional<Integer> medianRent = tryParse(csvReader.get(MEDIAN_RENT_COLUMN_INDEX));
                 final Optional<Integer> upperQuartileRent = tryParse(csvReader.get(UPPER_QUARTILE_RENT_COLUMN_INDEX));
                 
-                final RentStats rentStats = new RentStats(lowerQuartileRent, medianRent, upperQuartileRent);
+                final RentStatistic rentStats = new RentStatistic(lowerQuartileRent, medianRent, upperQuartileRent);
                 
                 result.put(district, rentStats);
             }

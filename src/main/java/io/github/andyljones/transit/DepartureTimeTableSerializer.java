@@ -2,26 +2,19 @@ package io.github.andyljones.transit;
 
 import io.github.andyljones.transit.graph.Station;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.internal.bind.JsonTreeWriter;
-import com.google.gson.stream.JsonWriter;
 
 public class DepartureTimeTableSerializer 
 {

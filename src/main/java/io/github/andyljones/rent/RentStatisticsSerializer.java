@@ -15,8 +15,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class RentStatisticsSerializer 
-{
-    public static void serialize(Collection<String> stationNames, Function<String, RentStats> getStats, String filename)
+{    
+    public static void serialize(Collection<String> stationNames, Function<String, RentStatistic> getStats, String filename)
     {
         JsonElement statisticsObject = buildStatisticsObject(stationNames, getStats);
         
@@ -38,7 +38,7 @@ public class RentStatisticsSerializer
         }
     }
 
-    private static JsonObject buildStatisticsObject(Collection<String> stationNames, Function<String, RentStats> getStats) 
+    private static JsonObject buildStatisticsObject(Collection<String> stationNames, Function<String, RentStatistic> getStats) 
     {
         JsonObject statisticsObject = new JsonObject();
         
@@ -57,7 +57,7 @@ public class RentStatisticsSerializer
         
         for (String stationName : stationNames)
         {
-            RentStats stats = getStats.apply(stationName);
+            RentStatistic stats = getStats.apply(stationName);
 
             names.add(new JsonPrimitive(stationName));
             lowerQuartiles.add(new JsonPrimitive(stats.getLowerQuartile().orElse(null)));
