@@ -1,8 +1,8 @@
 package io.github.andyljones.commutesandrent.transitpreprocessortests;
 
 import static org.hamcrest.Matchers.*;
+import io.github.andyljones.commutesandrent.transitpreprocessor.Station;
 import io.github.andyljones.commutesandrent.transitpreprocessor.StationFinder;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
 
 import org.junit.Assert;
 import org.junit.Test;

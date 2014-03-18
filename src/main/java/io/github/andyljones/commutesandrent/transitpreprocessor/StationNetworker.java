@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.github.andyljones.commutesandrent.model.uk.org.transxchange.JourneyPatternTimingLinkStructure;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Stop;
 
 public class StationNetworker 
 {    

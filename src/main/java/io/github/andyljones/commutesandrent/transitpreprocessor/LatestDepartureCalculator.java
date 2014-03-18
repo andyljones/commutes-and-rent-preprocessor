@@ -11,9 +11,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Stop;
-
 public class LatestDepartureCalculator 
 {
     private final Map<Station, StationTime> latestStationTimes = new HashMap<>();

@@ -1,11 +1,10 @@
 package io.github.andyljones.commutesandrent.transitpreprocessor;
 
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -20,19 +19,19 @@ public class DepartureTimeTableSerializer
 {
     private static final long MILLIS_TO_MINUTES = 60_000;
     
-    public static void serialize(GregorianCalendar arrivalTime, List<Station> stations, Map<Station, Map<Station, GregorianCalendar>> table, String filename)
+    public static void serialize(GregorianCalendar arrivalTime, Station destination, Map<Station, GregorianCalendar> table, String foldername)
     {
         JsonObject departureTimeTable = new JsonObject();
         departureTimeTable.addProperty("arrivalTime", arrivalTime.getTimeInMillis() / MILLIS_TO_MINUTES);
+        departureTimeTable.addProperty("destination", destination.getName());
         
-        departureTimeTable.add("stations", buildTableHeader(stations));
-        departureTimeTable.add("times", buildTableObject(stations, table));
+        departureTimeTable.add("times", buildTableObject(table));
         
         Gson gson = new GsonBuilder().serializeNulls().create();
 
         try
         {
-            Writer fileWriter = new FileWriter(filename);
+            Writer fileWriter = new FileWriter(foldername + "/" + destination.getName() + ".json");
             Writer out = new PrintWriter(fileWriter);
             
             out.write(gson.toJson(departureTimeTable));
@@ -45,41 +44,18 @@ public class DepartureTimeTableSerializer
             ioe.printStackTrace();
         }
     }
-        
-    private static JsonArray buildTableHeader(List<Station> stations) 
-    {
-        JsonArray headerArray = new JsonArray();
-        
-        for (Station station : stations)
-        {
-            headerArray.add(new JsonPrimitive(station.getName()));
-        }
-        
-        return headerArray;
-    }
 
-    private static JsonArray buildTableObject(List<Station> stations, Map<Station, Map<Station, GregorianCalendar>> table)
+    private static JsonArray buildTableObject(Map<Station, GregorianCalendar> table)
     {
         JsonArray result = new JsonArray();
         
-        for (int i = 0; i < stations.size(); i++)
+        for (Map.Entry<Station, GregorianCalendar> entry : table.entrySet())
         {
-            for (int j = 0; j < stations.size(); j++)
-            {
-                Station destination = stations.get(i);
-                Station origin = stations.get(j);
-                
-                Map<Station, GregorianCalendar> originMap = table.get(destination);
-                
-                Long timeInMinutes = null;
-                if (originMap != null)
-                {
-                    GregorianCalendar time = originMap.get(origin);
-                    timeInMinutes = time.getTimeInMillis() / MILLIS_TO_MINUTES;
-                }
-                
-                result.add(new JsonPrimitive(timeInMinutes));
-            }
+            JsonObject entryObject = new JsonObject();
+            entryObject.addProperty("station", entry.getKey().getName());
+            entryObject.addProperty("time", entry.getValue().getTimeInMillis() / MILLIS_TO_MINUTES);
+            
+            result.add(entryObject);       
         }
         
         return result;

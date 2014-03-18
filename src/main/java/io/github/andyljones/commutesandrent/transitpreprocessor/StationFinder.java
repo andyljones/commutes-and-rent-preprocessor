@@ -1,7 +1,6 @@
 package io.github.andyljones.commutesandrent.transitpreprocessor;
 
 import io.github.andyljones.commutesandrent.model.uk.org.transxchange.StopPointStructure;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
 
 import java.util.Collection;
 import java.util.HashMap;

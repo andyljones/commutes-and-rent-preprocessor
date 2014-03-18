@@ -1,4 +1,4 @@
-package io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph;
+package io.github.andyljones.commutesandrent.transitpreprocessor;
 
 import java.util.Comparator;
 

@@ -1,7 +1,5 @@
 package io.github.andyljones.commutesandrent.transitpreprocessor;
 
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
-
 import java.util.GregorianCalendar;
 
 public class StationTime {

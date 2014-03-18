@@ -2,7 +2,6 @@ package io.github.andyljones.commutesandrent.transitpreprocessor;
 
 import io.github.andyljones.commutesandrent.model.uk.org.transxchange.StopPointStructure;
 import io.github.andyljones.commutesandrent.model.uk.org.transxchange.TransXChange;
-import io.github.andyljones.commutesandrent.transitpreprocessor.transit.graph.Station;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,21 +56,5 @@ public class DeserializationUtilities
     public static Collection<JourneyPartsHolder> getPartsHolders(Collection<TransXChange> timetableRoots)
     {
         return timetableRoots.stream().flatMap(root -> JourneyHolders.asHolders(root).stream()).collect(Collectors.toList());
-    }
-
-    public static Map<Station, Map<Station, GregorianCalendar>> getDepartureTimes(List<Station> stations, GregorianCalendar targetTime)
-    {
-        Map<Station, Map<Station, GregorianCalendar>> result = new HashMap<>();
-        for (Station station : stations)
-        {
-            System.out.println("Processing station " + station.getName());
-            
-            LatestDepartureCalculator calculator = new LatestDepartureCalculator(station, targetTime);
-            Map<Station, GregorianCalendar> times = calculator.getDepartureTimes();
-            
-            result.put(station, times);
-        }
-        
-        return result;
     }
 }
