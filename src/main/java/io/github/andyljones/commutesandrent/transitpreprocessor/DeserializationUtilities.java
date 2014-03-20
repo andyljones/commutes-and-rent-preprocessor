@@ -25,7 +25,7 @@ public class DeserializationUtilities
         Collection<TransXChange> result = new ArrayList<>();
         try
         {
-            Path timetableDirectory = Paths.get(DepartureTimeTables.class.getResource(TIMETABLE_DIRECTORY_PATH).toURI());
+            Path timetableDirectory = Paths.get(DepartureTimesGenerator.class.getResource(TIMETABLE_DIRECTORY_PATH).toURI());
 
             System.out.println(timetableDirectory.toString());
             List<Path> timetableFiles = Files.list(timetableDirectory).collect(Collectors.toList());

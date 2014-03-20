@@ -1,4 +1,4 @@
-package io.github.andyljones.commutesandrent.rentpreprocessortests;
+package io.github.andyljones.commutesandrent.transitpreprocessortests;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,9 +19,9 @@ import io.github.andyljones.commutesandrent.transitpreprocessor.StationFinder;
 public class ScratchTest {
     
     
-    //@Test
+    @Test
     public void scratch()
     {
-
+        DepartureTimesGenerator.generate(17, 0, "output/processed-departure-times/1700");
     } 
 }

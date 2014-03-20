@@ -18,7 +18,7 @@ public class RentStatisticsSerializer
 {    
     public static void serialize(Collection<String> stationNames, Function<String, RentStatistic> getStats, String filename)
     {
-        JsonElement statisticsObject = buildStatisticsObject(stationNames, getStats);
+        JsonElement statisticsArray = buildStatisticsArray(stationNames, getStats);
         
         Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -27,7 +27,7 @@ public class RentStatisticsSerializer
             Writer fileWriter = new FileWriter(filename);
             Writer out = new PrintWriter(fileWriter);
             
-            out.write(gson.toJson(statisticsObject));
+            out.write(gson.toJson(statisticsArray));
             
             out.close();
         }
@@ -38,33 +38,30 @@ public class RentStatisticsSerializer
         }
     }
 
-    private static JsonObject buildStatisticsObject(Collection<String> stationNames, Function<String, RentStatistic> getStats) 
+    private static JsonElement buildStatisticsArray(Collection<String> stationNames, Function<String, RentStatistic> getStats) 
     {
-        JsonObject statisticsObject = new JsonObject();
-        
-        JsonArray names = new JsonArray();
-        statisticsObject.add("names", names);
-        
-        JsonArray lowerQuartiles = new JsonArray();
-        statisticsObject.add("lowerQuartiles", lowerQuartiles);
-        
-        JsonArray medians = new JsonArray();
-        statisticsObject.add("medians", medians);
-        
-        JsonArray upperQuartiles = new JsonArray();
-        statisticsObject.add("upperQuartiles", upperQuartiles);
-        
+        JsonArray result = new JsonArray();
         
         for (String stationName : stationNames)
         {
-            RentStatistic stats = getStats.apply(stationName);
-
-            names.add(new JsonPrimitive(stationName));
-            lowerQuartiles.add(new JsonPrimitive(stats.getLowerQuartile().orElse(null)));
-            medians.add(new JsonPrimitive(stats.getMedian().orElse(null)));
-            upperQuartiles.add(new JsonPrimitive(stats.getUpperQuartile().orElse(null)));
+            RentStatistic rentStat = getStats.apply(stationName);
+            JsonElement statObject = buildStatisticObject(stationName, rentStat);
+            
+            result.add(statObject);
         }
         
-        return statisticsObject;
+        return result;
+    }
+    
+    private static JsonElement buildStatisticObject(String stationName, RentStatistic rentStat)
+    {
+        JsonObject result = new JsonObject();
+        
+        result.addProperty("name", stationName);
+        result.addProperty("lowerQuartile", rentStat.getLowerQuartile().orElse(null));
+        result.addProperty("median", rentStat.getMedian().orElse(null));
+        result.addProperty("upperQuartile", rentStat.getUpperQuartile().orElse(null));
+        
+        return result;
     }
 }
