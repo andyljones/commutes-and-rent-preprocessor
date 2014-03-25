@@ -1161,6 +1161,126 @@
 			</Point>
 			<styleUrl>#tubeStyle</styleUrl>
 		</Placemark>
+        <Placemark>
+			<name>
+				London City Airport
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.047887121033287,51.50368965775,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				Langdon Park
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                -0.015199388573999,51.518883939693,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				Pontoon Dock
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.033340112607835,51.502216211037,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				Star Lane
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.0042054135552674,51.520604250081,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				West Silvertown DLR Station
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.022260451989289,51.502884431544,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				Canary Wharf DLR Station
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                -0.019452434600173,51.503578406232,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				Abbey Road DLR Station
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.0037377856069111,51.531951985733,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+                <Placemark>
+			<name>
+				Woolwich Arsenal DLR Station
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.069208307647642,51.489907107526,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+                <Placemark>
+			<name>
+				Stratford International DLR Station
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                -0.0087640154463654,51.54480853536,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
+        <Placemark>
+			<name>
+				King George V.
+			</name>
+			<description></description>
+			<Point>
+				<coordinates>
+                0.062220618931645,51.502008599189,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
 		<Placemark>
 			<name>
 				Hendon Central Station
@@ -2397,6 +2517,18 @@
 			</Point>
 			<styleUrl>#tubeStyle</styleUrl>
 		</Placemark>
+        <Placemark>
+			<name>
+				Stratford High Street
+			</name>
+			<description>1-2 Burford Road, London E15 2SP, UK</description>
+			<Point>
+				<coordinates>
+					-0.001066,51.538149,0
+				</coordinates>
+			</Point>
+			<styleUrl>#tubeStyle</styleUrl>
+		</Placemark>
 		<Placemark>
 			<name>
 				Sudbury Hill Station
@@ -3043,6 +3175,20 @@
 			</Point>
 			<styleUrl>#dlrStyle</styleUrl>
 		</Placemark>
+        <Placemark>
+			<name>
+				Bow Church DLR
+			</name>
+			<description>
+				London Underground, 55 Broadway, London, SW1H 0BD
+			</description>
+			<Point>
+				<coordinates>
+					-.020691424393872180,51.527333106708156000,0
+				</coordinates>
+			</Point>
+			<styleUrl>#dlrStyle</styleUrl>
+		</Placemark>
 		<Placemark>
 			<name>
 				Bromley-By-Bow Station
@@ -3059,7 +3205,7 @@
 		</Placemark>
 		<Placemark>
 			<name>
-				Crossharbour &amp; London Arena Station
+				Crossharbour
 			</name>
 			<description>
 				London Underground, 55 Broadway, London, SW1H 0BD

@@ -3,6 +3,7 @@ package io.github.andyljones.commutesandrent.transitpreprocessor;
 import io.github.andyljones.commutesandrent.model.uk.org.transxchange.TransXChange;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class DepartureTimesGenerator {
 
     public static void generate(int hours, int minutes, String outputFolder)
-    {
+    {        
         GregorianCalendar targetArrivalTime = new GregorianCalendar(1970, 0, 1, hours, minutes, 0);
         
         Collection<TransXChange> timetableRoots = DeserializationUtilities.getTimetableRoots();

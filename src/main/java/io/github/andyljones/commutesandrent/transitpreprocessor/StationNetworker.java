@@ -27,7 +27,7 @@ public class StationNetworker
         List<JourneyPatternTimingLinkStructure> links = journeyParts.linkStructures;
         
         GregorianCalendar currentTime = journeyParts.journeyStructure.getDepartureTime().toGregorianCalendar();
-        
+
         JourneyPatternTimingLinkStructure firstLink = links.get(0);
         Stop firstStop = buildFirstStopAndUpdateTime(currentTime, firstLink);
         StationNetworkerUtilities.addRunTime(currentTime, firstLink);

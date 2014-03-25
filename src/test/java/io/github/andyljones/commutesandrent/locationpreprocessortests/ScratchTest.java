@@ -29,6 +29,13 @@ public class ScratchTest
         Kml kml = KmlUnmarshaller.getRootElement("/station-locations/station-locations.kml");
         LocationFinder lf = new LocationFinder(kml);
         
+        System.out.println(stationNames.size());
+        for (String name : stationNames)
+        {
+            System.out.format("%30s \t %s\n", name, lf.getLocation(name));
+        }
+        
+        
         LocationSerializer.serialize(stationNames, lf::getLocation, "output/processed-locations/locations.json");
     }
 }

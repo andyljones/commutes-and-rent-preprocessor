@@ -1,6 +1,11 @@
 package io.github.andyljones.commutesandrent.transitpreprocessortests;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +24,22 @@ import io.github.andyljones.commutesandrent.transitpreprocessor.StationFinder;
 public class ScratchTest {
     
     
-    //@Test
+    @Test
     public void scratch()
-    {
-        DepartureTimesGenerator.generate(17, 0, "output/processed-departure-times/1700");
+    {      
+        try 
+        {
+            for (int i = 1; i <= 24; i++)
+            {
+                String folder = "output/processed-departure-times/" + (i-1)*60;
+                Files.createDirectories(Paths.get(folder));
+                DepartureTimesGenerator.generate(i, 0, folder);
+            }
+        }
+        catch (IOException ioe)
+        {
+            
+        }
+        
     } 
 }

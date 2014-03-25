@@ -58,7 +58,7 @@ public class StationPostcodeFinder {
     private static String normalizeName(String stationName) 
     {
                 
-        String[] nameComponents = stationName.split("( Station| \\()");
+        String[] nameComponents = stationName.split("( Station| \\(| DLR)");
         String normalizedName = nameComponents[0].replaceAll("\'", "").trim();
         
         return normalizedName;
