@@ -8,17 +8,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Builds Station objects from a set of StopPointStructures.
+ */
 public class StationFinder {
 
     public Collection<Station> getStations() { return new HashSet<>(stationMap.values()); }
     public Station getStation(final String atcoCode) { return stationMap.get(atcoCode); }
     private final Map<String, Station> stationMap;
     
+    /**
+     * Constructs a collection of Station objects from the provided StopPointStructures.
+     * @param stopPoints
+     */
     public StationFinder(final Collection<StopPointStructure> stopPoints)
     {
         stationMap = buildStationMap(stopPoints);
     }
 
+    // Constructs a map from ATCO codes to station objects by combining an ATCO code -> station name map and a station 
+    // name -> station object map.
     private static Map<String, Station> buildStationMap(Collection<StopPointStructure> stopPoints) 
     {
         final Map<String, String> atcoCodeMap = buildAtcoCodeMap(stopPoints);
@@ -37,6 +46,7 @@ public class StationFinder {
         return result;
     }
 
+    // Constructs a map from station names to station objects.
     private static Map<String, Station> buildStationNameMap(Collection<String> stationNames) 
     {        
         final Map<String, Station> result = stationNames.stream().distinct().collect(Collectors.toMap(name -> name, name -> new Station(name)));
@@ -44,6 +54,7 @@ public class StationFinder {
         return result;
     }
 
+    // Constructs a map from ATCO codes to station names.
     private static Map<String, String> buildAtcoCodeMap(Collection<StopPointStructure> stopPoints)
     {
         final Map<String, String> result = new HashMap<>();

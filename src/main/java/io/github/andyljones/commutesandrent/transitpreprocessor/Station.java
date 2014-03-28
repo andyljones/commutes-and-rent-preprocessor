@@ -3,6 +3,9 @@ package io.github.andyljones.commutesandrent.transitpreprocessor;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+/**
+ * Represents a station in a transport network. 
+ */
 public class Station 
 {
     public String getName() { return name; }

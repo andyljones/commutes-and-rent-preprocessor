@@ -16,10 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Static methods for extracting various components from a collection of timetables.
+ */
 public class DeserializationUtilities 
 {
     private static final String TIMETABLE_DIRECTORY_PATH = "/timetables";
     
+    /**
+     * Deserializes the timetables in timetables/ and returns their root elements.
+     * @return A collection of root elements from the timetables.
+     */
     public static Collection<TransXChange> getTimetableRoots()
     {
         Collection<TransXChange> result = new ArrayList<>();
@@ -30,7 +37,7 @@ public class DeserializationUtilities
             System.out.println(timetableDirectory.toString());
             List<Path> timetableFiles = Files.list(timetableDirectory).collect(Collectors.toList());
             
-            
+            // Unmarshall each timetable file and add it's root element to the result.
             for (Path file : timetableFiles)
             {
                 System.out.println("Loading " + file.toString());
@@ -48,13 +55,23 @@ public class DeserializationUtilities
         return result;
     }
     
+    /**
+     * Extracts all StopPointStructures from the provided TransXChange models.
+     * @param timetableRoots The root elements of the TransXChange structures to extract the stop points from
+     * @return All StopPointStructures from the TransXChange models.
+     */
     public static Collection<StopPointStructure> getStopPoints(Collection<TransXChange> timetableRoots) 
-    {
+    {   //TODO: Move this over to StationFinder?
         return timetableRoots.stream().flatMap(root -> root.getStopPoints().getStopPoint().stream()).collect(Collectors.toList());
     }
 
+    /**
+     * Extracts from each provided TransXChange structure a collection of JourneyPartsHolder, and returns their union.
+     * @param timetableRoots The root elements of the TransXChange structures to extract the JourneyPartsHolders from
+     * @return All JourneyPartsHolders from the TransXChange models.
+     */
     public static Collection<JourneyPartsHolder> getPartsHolders(Collection<TransXChange> timetableRoots)
-    {
+    {   //TODO: Move this over the JourneyHolders?
         return timetableRoots.stream().flatMap(root -> JourneyHolders.asHolders(root).stream()).collect(Collectors.toList());
     }
 }

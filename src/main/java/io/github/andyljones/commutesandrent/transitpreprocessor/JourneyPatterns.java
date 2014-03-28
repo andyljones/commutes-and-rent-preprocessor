@@ -8,8 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Static methods for adding JourneyPatternStructures to JourneyPartsHolders.
+ */
 public class JourneyPatterns 
 {
+    //TODO: Fold this into JourneyHolders?
+    /**
+     * Maps the JourneyPatternRefs of each JourneyPartsHolder.journeyStructure to the corresponding JourneyPatternStructure,
+     * and adds them to the JourneyPartsHolder.
+     * @param holders The JourneyPartsHolders to use.
+     */
     public static void addToHolders(final ServicesStructure services, final Collection<JourneyPartsHolder> holders) 
     {
         final Map<String, JourneyPatternStructure> patternIdMap = buildPatternsMap(services);
@@ -23,6 +32,7 @@ public class JourneyPatterns
         }
     }
 
+    // Uses a timetable's ServicesStructure to constructs a map from JourneyPatternRefs to JourneyPatternStructures.
     private static Map<String, JourneyPatternStructure> buildPatternsMap(final ServicesStructure services) 
     {
         final List<JourneyPatternStructure> patterns = services.getService().stream()

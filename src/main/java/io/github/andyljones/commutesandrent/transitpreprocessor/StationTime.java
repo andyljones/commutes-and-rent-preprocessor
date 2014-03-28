@@ -2,6 +2,9 @@ package io.github.andyljones.commutesandrent.transitpreprocessor;
 
 import java.util.GregorianCalendar;
 
+/**
+ * Datatype that holds a station and a time.
+ */
 public class StationTime {
 
     public GregorianCalendar getTime() { return time; }

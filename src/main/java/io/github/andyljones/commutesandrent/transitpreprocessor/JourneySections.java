@@ -11,6 +11,12 @@ import java.util.stream.Collectors;
 
 public class JourneySections 
 {
+    //TODO: Fold this into JourneyHolders?
+    /**
+     * Adds each JourneyPatternTimingLink in a JourneyPartsHolder's JourneySectionStructures to the JourneyPartsHolder's
+     * linkStructures property.
+     * @param holders The JourneyPartsHolders to use.
+     */
     public static void addToHolders(final JourneyPatternSectionsStructure sectionsStructure, final Collection<JourneyPartsHolder> holders) 
     {
         final Map<String, JourneyPatternSectionStructure> sectionIdMap = buildSectionsMap(sectionsStructure);
@@ -27,6 +33,8 @@ public class JourneySections
         }
     }
     
+    // Uses a TransXChange model's JourneyPatternSectionsStructure to build a map from JourneyPatternSectionRefs to 
+    // JourneyPatternSectionStructures.
     private static Map<String, JourneyPatternSectionStructure> buildSectionsMap(final JourneyPatternSectionsStructure sectionsStructure)
     {
         final List<JourneyPatternSectionStructure> sections = sectionsStructure.getJourneyPatternSection();

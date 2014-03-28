@@ -3,6 +3,9 @@ package io.github.andyljones.commutesandrent.transitpreprocessor;
 import java.util.GregorianCalendar;
 import java.util.Optional;
 
+/**
+ * Datatype for a Stop object, which represents a train's arrival and/or departure from a station.
+ */
 public class Stop 
 {
     public GregorianCalendar getArrivalTime() { return arrivalTime; }

@@ -15,10 +15,23 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Static class for serializing processed timetable data into JSON files.
+ */
 public class DepartureTimeTableSerializer 
 {
     private static final long MILLIS_TO_MINUTES = 60_000;
     
+    /**
+     * Constructs a departure time JSON file for the specified destination & arrival time and writes it to the specified folder.
+     * The name of the file will be the name of the station.
+     * 
+     * The lookup table should be for the specified time and destination station. //TODO: Fix serialize's dependency on being passed the correct table
+     * @param arrivalTime The time commutes should arrive at the destination station by
+     * @param destination The destination station
+     * @param table The departure time table for the specified arrival time and destination
+     * @param foldername The folder to write the JSON file to.
+     */
     public static void serialize(GregorianCalendar arrivalTime, Station destination, Map<Station, GregorianCalendar> table, String foldername)
     {
         JsonObject departureTimeTable = new JsonObject();
@@ -45,6 +58,7 @@ public class DepartureTimeTableSerializer
         }
     }
 
+    // Builds a JSON array from the given map. Each entry is converted to a { stationname, departuretime } JSON object
     private static JsonArray buildTableObject(Map<Station, GregorianCalendar> table)
     {
         JsonArray result = new JsonArray();

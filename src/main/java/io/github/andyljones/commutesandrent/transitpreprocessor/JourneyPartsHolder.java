@@ -8,6 +8,9 @@ import io.github.andyljones.commutesandrent.model.uk.org.transxchange.VehicleJou
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Datatype for holding the components of a TransXChange model which together represent a journey.
+ */
 public class JourneyPartsHolder
 {
     public VehicleJourneyStructure journeyStructure;

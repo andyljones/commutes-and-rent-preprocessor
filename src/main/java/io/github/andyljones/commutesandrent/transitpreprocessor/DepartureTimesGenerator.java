@@ -11,8 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Static class for converting the XML timetables in timetables/ to departure time files for a given
+ * arrival time.
+ */
 public class DepartureTimesGenerator {
 
+    /**
+     * Converts the XML timetables in timetables/ into a set of JSON departure time files, one for each station.
+     * 
+     * The departure times listed in these files are the time a commuter would have to leave each station to get to 
+     * the destination station for the specified time.
+     * @param hours
+     * @param minutes
+     * @param outputFolder
+     */
     public static void generate(int hours, int minutes, String outputFolder)
     {        
         GregorianCalendar targetArrivalTime = new GregorianCalendar(1970, 0, 1, hours, minutes, 0);
@@ -27,7 +40,7 @@ public class DepartureTimesGenerator {
         
         for (Station destination : stations)
         {
-            System.out.println("Processing station " + destination.getName());
+            System.out.println("Processing departure times for station " + destination.getName());
             
             LatestDepartureCalculator calculator = new LatestDepartureCalculator(destination, targetArrivalTime);
          
