@@ -11,8 +11,6 @@ import com.csvreader.CsvReader;
 
 /**
  * Maps station names to postcodes.
- * @author andy
- *
  */
 public class StationPostcodeFinder {
     
@@ -34,6 +32,7 @@ public class StationPostcodeFinder {
         nameToPostcodeMap = buildNameToPostcodeMap(csvReader);
     }
 
+    // Reads the given CSV file into a map from station names to postcodes.
     private static Map<String, String> buildNameToPostcodeMap(CsvReader csvReader) 
     {
         final Map<String, String> result = new HashMap<>();
@@ -55,15 +54,18 @@ public class StationPostcodeFinder {
         return result;
     }
 
+    // Converts a name to a more standard format.
+    // This helps because the names of stations found in the KML file often don't quite match the names of stations in 
+    // the TransXChange file. Some hand-editing is still needed, but this eliminates a lot of it.
     private static String normalizeName(String stationName) 
     {
-                
         String[] nameComponents = stationName.split("( Station| \\(| DLR)");
         String normalizedName = nameComponents[0].replaceAll("\'", "").trim();
         
         return normalizedName;
     }
-
+    
+    // Converts a postcode to a standard 7-letter format.
     private static String formatToSevenCharacters(String postcode) 
     {    
         final String[] components = postcode.split(" ");

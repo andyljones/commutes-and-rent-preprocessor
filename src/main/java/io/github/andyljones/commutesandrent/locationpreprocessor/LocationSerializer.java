@@ -56,7 +56,7 @@ public class LocationSerializer
     {
         JsonArray result = new JsonArray();
         
-        // For each station name, get the corresponding location, combine them into a JSON object and then add them to the array.
+        // For each station name, get the corresponding location, combine them into a JSON object and then add it to the array.
         for (String stationName : stationNames)
         {
             LongLat coords = getCoords.apply(stationName);

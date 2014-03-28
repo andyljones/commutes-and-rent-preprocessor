@@ -12,8 +12,6 @@ import com.csvreader.CsvReader;
 /**
  * Associates Local Authority District codes with an average rent, using data taken from the Office of 
  * National Statistics private rental market summaries.
- * @author andy
- *
  */
 public class RentFinder 
 {
@@ -37,6 +35,7 @@ public class RentFinder
         rentMap = buildDistrictToRentMap(csvReader);
     }   
 
+    // Converts the provided rent CSV file into a map from district codes to rent statistics.
     private static Map<String, RentStatistic> buildDistrictToRentMap(CsvReader csvReader) 
     {
         final Map<String, RentStatistic> result = new HashMap<>();
@@ -65,6 +64,7 @@ public class RentFinder
         return result;
     }
     
+    // Parses a rent figure that's either a number or a "-", representing a null entry.
     private static Optional<Integer> tryParse(String rentFigure)
     {
         Optional<Integer> result;

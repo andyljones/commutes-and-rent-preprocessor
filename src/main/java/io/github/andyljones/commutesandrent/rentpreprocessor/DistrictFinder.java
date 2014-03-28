@@ -11,8 +11,6 @@ import com.csvreader.CsvReader;
 /**
  * Associates postcodes with their Local Authority District Code, using data taken from the Office of National 
  * Statistics' postcode lookup database.
- * @author andy
- *
  */
 public class DistrictFinder 
 {
@@ -29,7 +27,7 @@ public class DistrictFinder
     
     /**
      * Constructs the lookup function using data stored at the specified location.
-     * @param localAuthorityFilePath
+     * @param localAuthorityFilePath The CSV postcode file to read in.
      */
     public DistrictFinder(final String localAuthorityFilePath)
     {
@@ -39,6 +37,7 @@ public class DistrictFinder
         districtMap = buildPostcodeToDistrictMap(csvReader);
     }   
 
+    // Reads the postcode and district code from each line of the file into a hashmap.
     private static Map<String, String> buildPostcodeToDistrictMap(CsvReader csvReader) 
     {
         final Map<String, String> result = new HashMap<>();

@@ -2,6 +2,9 @@ package io.github.andyljones.commutesandrent.rentpreprocessor;
 
 import java.util.Optional;
 
+/**
+ * A datatype for rent statistics, holding the lower quartile, median and upper quartile rents for an area.
+ */
 public class RentStatistic 
 {
     public Optional<Integer> getLowerQuartile() {return lowerQuartile; }

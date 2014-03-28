@@ -14,14 +14,29 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Static class for serializing station rent data into a JSON file.
+ */
 public class RentStatisticsSerializer 
-{    
+{   
+    /**
+     * Writes each station to a JSON file along with the rent data associated with it.
+     * 
+     * The JSON written is an array of {name, lowerQuartile, median, upperQuartile } JSON objects, one for each station 
+     * in @param stationNames.
+     * @param stationNames The stations to write.
+     * @param getCoords A function that associates station names with rent statistics.
+     * @param filename The path of the file to write to.
+     */
     public static void serialize(Collection<String> stationNames, Function<String, RentStatistic> getStats, String filename)
     {
+        // Construct the JSON array that'll be written.
         JsonElement statisticsArray = buildStatisticsArray(stationNames, getStats);
         
+        // Instantiate the formatter using the GSON library.
         Gson gson = new GsonBuilder().serializeNulls().create();
 
+        // Try to write the JSON array to file, catching any IO errors.
         try
         {
             Writer fileWriter = new FileWriter(filename);
@@ -38,10 +53,12 @@ public class RentStatisticsSerializer
         }
     }
 
+    // Build a JSON array of {name, lowerQuartile, median, upperQuartile } JSON objects
     private static JsonElement buildStatisticsArray(Collection<String> stationNames, Function<String, RentStatistic> getStats) 
     {
         JsonArray result = new JsonArray();
         
+        // For each station name, get the corresponding rent statistics, combine them into a JSON object and then add it to the array.
         for (String stationName : stationNames)
         {
             RentStatistic rentStat = getStats.apply(stationName);
@@ -53,6 +70,7 @@ public class RentStatisticsSerializer
         return result;
     }
     
+    // Build a JSON object containing the given station name and the given rent statistics.
     private static JsonElement buildStatisticObject(String stationName, RentStatistic rentStat)
     {
         JsonObject result = new JsonObject();
