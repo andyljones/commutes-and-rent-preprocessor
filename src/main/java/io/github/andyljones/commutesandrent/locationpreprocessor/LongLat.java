@@ -1,5 +1,10 @@
 package io.github.andyljones.commutesandrent.locationpreprocessor;
 
+/**
+ * A datatype for latitude-longitude information.
+ * @author andy
+ *
+ */
 public class LongLat {
 
     public double getLongitude() { return longitude; }

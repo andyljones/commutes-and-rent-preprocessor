@@ -12,16 +12,29 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
+/**
+ * Static methods for serializing station location data into a JSON file.
+ */
 public class LocationSerializer 
-{    
+{   
+    /**
+     * Writes each station to a JSON file along with the latitude-longitude associated with it.
+     * 
+     * The JSON written is an array of {name, latitude, longitude} JSON objects, one for each station in @param stationNames.
+     * @param stationNames The stations to write.
+     * @param getCoords A function that associates station names with latitude-longitudes.
+     * @param filename The path of the file to write to.
+     */
     public static void serialize(Collection<String> stationNames, Function<String, LongLat> getCoords, String filename)
     {
+        // Construct the JSON array that'll be written.
         JsonElement statisticsArray = buildCoordinatesArray(stationNames, getCoords);
         
+        // Instantiate the formatter used by the GSON library.
         Gson gson = new GsonBuilder().serializeNulls().create();
 
+        // Try to write the JSON array to file, catching any IO errors.
         try
         {
             Writer fileWriter = new FileWriter(filename);
@@ -38,10 +51,12 @@ public class LocationSerializer
         }
     }
 
+    // Build a JSON array of { station-name, station-location } objects.
     private static JsonElement buildCoordinatesArray(Collection<String> stationNames, Function<String, LongLat> getCoords) 
     {
         JsonArray result = new JsonArray();
         
+        // For each station name, get the corresponding location, combine them into a JSON object and then add them to the array.
         for (String stationName : stationNames)
         {
             LongLat coords = getCoords.apply(stationName);
@@ -53,6 +68,7 @@ public class LocationSerializer
         return result;
     }
     
+    // Build a JSON object containing the given station name and the given coordinates.
     private static JsonElement buildCoordinateObject(String stationName, LongLat coords)
     {
         JsonObject result = new JsonObject();
