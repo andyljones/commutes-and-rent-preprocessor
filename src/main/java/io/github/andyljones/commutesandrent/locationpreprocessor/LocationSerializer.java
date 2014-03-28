@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * Static methods for serializing station location data into a JSON file.
+ * Static class for serializing station location data into a JSON file.
  */
 public class LocationSerializer 
 {   
