@@ -1,7 +1,7 @@
 This is the preprocessor for an [exploration of commutes & rent in London](andyljones.github.io/pages/commutes-and-rent). 
 
 <p align="center">
-<img src="http://i.minus.com/iEpN95jpWRIBq.png">
+<img src="http://i.imgur.com/v8VOP7o.png">
 </p>
 
 It has three purposes: 
